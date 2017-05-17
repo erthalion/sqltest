@@ -1,8 +1,8 @@
 sql:
   - SELECT { <asterisk> } FROM { <JSON table> } test
 override:
-  JSON API common syntax: "jsonb '{\"a\": 1}', '$'"
-  JSON table plan clause: "test text"
+  JSON API common syntax: "jsonb '{\"test\": 1}', '$'"
+  JSON table plan clause: "PLAN (json_table_path_name)"
   column name: "test_column"
   data type: "text"
   value expression: "test text"

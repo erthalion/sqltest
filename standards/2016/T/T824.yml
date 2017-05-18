@@ -1,11 +1,11 @@
 sql:
   - SELECT { <asterisk> } FROM { <JSON table> } test
 override:
-  JSON API common syntax: "jsonb '{\"test\": 1}', '$'"
-  JSON table plan clause: "PLAN (json_table_path_name)"
+  JSON API common syntax: "jsonb '{\"test1\": 1, \"test2\": 2, \"test3\": 3, \"test_column\": 4}', '$' AS test_table_path_name"
+  JSON table plan clause: "PLAN (test_table_path_name)"
   column name: "test_column"
   data type: "text"
-  value expression: "test text"
+  value expression: "test1 text"
   JSON path specification: "$test"
-  JSON table formatted column definition: "test text"
-  JSON table nested columns: "test text"
+  JSON table formatted column definition: "test2 text"
+  JSON table nested columns: "test3 text"

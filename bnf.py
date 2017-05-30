@@ -1,3 +1,4 @@
+from random import randint
 import re
 import pprint
 import sys
@@ -12,6 +13,9 @@ import itertools
 #   1. Change render() methods to json() and add option to CLI.
 #   2. Clean up CLI docs so that each mode is documented separately.
 #   3. See TODO below about resolving recusions at any level.
+
+
+global_cycle = itertools.count(1)
 
 class RecursiveException(Exception):
     """Thrown when recursion is detected on a BNF rule."""
@@ -286,7 +290,14 @@ class ASTRule:
 
     def resolve(self, rules, overrides, exclude, stack):
         if self.name in overrides:
-            return ASTTokens([[overrides[self.name]]])
+            if "random_int" in overrides[self.name]:
+                value = ASTKeyword(overrides[self.name].format(random_int=randint(0, 100)))
+            elif "next" in overrides[self.name]:
+                value = ASTKeyword(overrides[self.name].format(next=next(global_cycle)))
+            else:
+                value = overrides[self.name]
+
+            return ASTTokens([[value]])
 
         # TODO: recursive values can be resolve at any level, not just the top
         # level.

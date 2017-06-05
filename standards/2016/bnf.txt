@@ -447,7 +447,197 @@
     PASSING <JSON argument> [ { <comma> <JSON argument> }... ]
 
 <JSON path specification> ::=
+    <JSON path mode> <JSON path wff>
+
+<JSON path mode> ::= strict | lax
+
+<JSON path primary> ::= <JSON path literal>
+    | <JSON path variable>
+    | <left paren> <JSON path wff> <right paren>
+
+<JSON path variable> ::= <JSON path context variable>
+    | <JSON path named variable> <at sign>
+    | <JSON last subscript>
+
+<JSON path context variable> ::= <dollar sign>
+
+<JSON path identifier> ::=
     <character string literal>
+
+<JSON path named variable> ::= <dollar sign> <JSON path identifier>
+
+<JSON last subscript> ::= last
+
+<JSON accessor expression> ::= <JSON path primary>
+    | <JSON accessor expression> <JSON accessor op>
+
+<SQL JSON special symbol> ::= <asterisk>
+    | <at sign>
+    | <comma>
+    | <dollar sign>
+    | <double ampersand>
+    | <double equals>
+    | <double vertical bar>
+    | <exclamation mark>
+    | <greater than operator>
+    | <greater than or equals operator>
+    | <left bracket>
+    | <left paren>
+    | <less than operator>
+    | <less than or equals operator>
+    | <minus sign>
+    | <not equals operator>
+    | <percent>
+    | <period>
+    | <plus sign>
+    | <question mark>
+    | <right bracket>
+    | <right paren>
+    | <solidus>
+
+<at sign> ::= @
+
+<double ampersand> ::= &&
+
+<double equals> ::= ==
+
+<double vertical bar> ::= ||
+
+<exclamation mark> ::= !
+
+<SQL JSON key word> ::= abs
+    | ceiling
+    | datetime
+    | double
+    | exists
+    | false
+    | flag
+    | floor
+    | is
+    | keyvalue
+    | last
+    | lax
+    | like regex
+    | null
+    | size
+    | starts
+    | strict
+    | to
+    | true
+    | type
+    | unknown
+    | with
+
+<JSON accessor op> ::= <JSON member accessor>
+    | <JSON wildcard member accessor>
+    | <JSON array accessor>
+    | <JSON wildcard array accessor>
+    | <JSON filter expression>
+    | <JSON item method>
+
+<JSON path string literal> ::=
+    <character string literal>
+
+<JSON member accessor> ::= <period> <JSON path key name>
+    | <period> <JSON path string literal>
+
+<JSON path key name> ::=
+    <character string literal>
+
+<JSON wildcard member accessor> ::= <period> <asterisk>
+
+<JSON array accessor> ::= <left bracket> <JSON subscript list> <right bracket>
+
+<JSON subscript list> ::= <JSON subscript> [ { <comma> <JSON subscript> }... ]
+
+<JSON subscript> ::= <JSON path wff 1>
+    | <JSON path wff 2> <to> <JSON path wff 3>
+
+<JSON path wff 1> ::= <JSON path wff>
+
+<JSON path wff 2> ::= <JSON path wff>
+
+<JSON path wff 3> ::= <JSON path wff>
+
+<JSON wildcard array accessor> ::= <left bracket> <asterisk> <right bracket>
+
+<JSON filter expression> ::= <question mark> <left paren> <JSON path predicate> <right paren>
+
+<JSON item method> ::= <period> <JSON method>
+
+<JSON method> ::= type <left paren> <right paren>
+    | size <left paren> <right paren>
+    | double <left paren> <right paren>
+    | ceiling <left paren> <right paren>
+    | floor <left paren> <right paren>
+    | abs <left paren> <right paren>
+    | datetime <left paren> [ <JSON datetime template> ] <right paren>
+    | keyvalue <left paren> <right paren>
+
+<JSON datetime template> ::= <JSON path string literal>
+
+<JSON unary expression> ::= <JSON accessor expression>
+    | <plus sign> <JSON unary expression>
+    | <minus sign> <JSON unary expression>
+
+<JSON multiplicative expression> ::= <JSON unary expression>
+    | <JSON multiplicative expression> <asterisk> <JSON unary expression>
+    | <JSON multiplicative expression> <solidus> <JSON unary expression>
+    | <JSON multiplicative expression> <percent> <JSON unary expression>
+
+<JSON additive expression> ::= <JSON multiplicative expression>
+    | <JSON additive expression> <plus sign> <JSON multiplicative expression>
+    | <JSON additive expression> <minus sign> <JSON multiplicative expression>
+
+<JSON path wff> ::= <JSON additive expression>
+
+<JSON predicate primary> ::= <JSON delimited predicate>
+    | <JSON non delimited predicate>
+
+<JSON delimited predicate> ::= <JSON exists path predicate>
+    | <left paren> <JSON path predicate> <right paren>
+
+<JSON non delimited predicate> ::= <JSON comparison predicate>
+    | <JSON like regex predicate>
+    | <JSON starts with predicate>
+    | <JSON unknown predicate>
+
+<JSON exists path predicate> ::= <exists> <left paren> <JSON path wff> <right paren>
+
+<JSON comparison predicate> ::= <JSON path wff> <JSON comp op> <JSON path wff>
+
+<JSON comp op> ::= <double equals>
+    | <not equals operator>
+    | <less than operator>
+    | <greater than operator>
+    | <less than or equals operator>
+    | <greater than or equals operator>
+
+<JSON like regex predicate> ::= <JSON path wff> <like regex> <JSON like regex pattern> [ flag <JSON like regex flags> ]
+
+<JSON like regex pattern> ::= <JSON path string literal>
+
+<JSON like regex flags> ::= <JSON path string literal>
+
+<JSON starts with predicate> ::= <JSON starts with whole> starts with <JSON starts with initial>
+
+<JSON starts with whole> ::= <JSON path wff>
+
+<JSON starts with initial> ::= <JSON path string literal>
+    | <JSON path named variable>
+
+<JSON unknown predicate> ::= <left paren> <JSON path predicate> <right paren> is unknown
+
+<JSON boolean negation> ::= <JSON predicate primary>
+    | <exclamation mark> <JSON delimited predicate>
+
+<JSON boolean conjunction> ::= <JSON boolean negation>
+    | <JSON boolean conjunction> <double ampersand> <JSON boolean negation>
+
+<JSON boolean disjunction> ::= <JSON boolean conjunction>
+    | <JSON boolean disjunction> <double vertical bar> <JSON boolean conjunction>
+
+<JSON path predicate> ::= <JSON boolean disjunction>
 
 <JSON predicate> ::=
     <string value expression> [ <JSON input clause> ] IS [ NOT ] JSON 
@@ -486,8 +676,11 @@
     WITHOUT [ ARRAY ]
   | WITH [ CONDITIONAL | UNCONDITIONAL ] [ ARRAY ]
 
+<JSON encoding> ::=
+  UTF8 | UTF16 | UTF32
+
 <JSON representation> ::=
-    JSON [ ENCODING { UTF8 UTF16 UTF32 } ]
+    JSON [ ENCODING <JSON encoding> ]
   | <implementation-defined JSON representation option>
 
 <JSON returning clause> ::=
@@ -3306,7 +3499,6 @@
   | EXCLUDING IDENTITY
 
 <implementation-defined JSON representation option> ::=
-    !! See the Syntax Rules.
 
 <implementation-defined character set name> ::=
     <character set name>

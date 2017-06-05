@@ -1,0 +1,10 @@
+sql:
+  - SELECT { <JSON query> } from (values( { <json value> } )) foo(js)
+override:
+  json value: "'{\"a\": 1}'"
+  value expression: "js"
+  JSON representation: "JSONB"
+  JSON path specification: "'$'"
+  JSON table path name: "test"
+  JSON passing clause: ""
+  data type: "JSONB"

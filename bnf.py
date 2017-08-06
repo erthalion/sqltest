@@ -7,6 +7,7 @@ import yaml
 import os.path
 import copy
 import itertools
+import hashlib
 
 # TODO:
 # 
@@ -16,6 +17,21 @@ import itertools
 
 
 global_cycle = itertools.count(1)
+history = {}
+
+
+def check(value):
+    str_val = str(value).strip()
+    if not str_val.startswith("<") or not str_val.endswith(">"):
+        return value
+
+    trace = hashlib.md5(str(value)).digest()
+    history[trace] = history.get(trace, 0) + 1
+    if history[trace] < 2:
+        return value
+    else:
+        return type(value)('')
+
 
 class RecursiveException(Exception):
     """Thrown when recursion is detected on a BNF rule."""
@@ -184,7 +200,7 @@ class ASTTokens(list):
 
                         for sub_path in sub_paths:
                             choice.append(copy.deepcopy(choice[choice_idx]))
-                            choice[-1] = ASTTokens(choice[-1][:token_idx] + sub_path + choice[-1][token_idx + 1:])
+                            choice[-1] = ASTTokens(choice[-1][:token_idx] + check(sub_path) + choice[-1][token_idx + 1:])
 
                         del choice[choice_idx]
 

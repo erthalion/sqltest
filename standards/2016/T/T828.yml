@@ -1,10 +1,13 @@
 sql:
-  - SELECT { <JSON query> } from (values( { <json value> } )) foo(js)
+  - SELECT JSON_QUERY ( js , { <JSON path specification> }  ) from ( values ( { <json value> } ) ) foo ( js )
 override:
   json value: "'{\"a\": 1}'"
-  value expression: "js"
-  JSON representation: "JSONB"
-  JSON path specification: "'$'"
-  JSON table path name: "test"
-  JSON passing clause: ""
-  data type: "JSONB"
+  JSON path identifier: "\'a\'"
+  JSON path literal: "\'a\'"
+  JSON subscript: "[1]"
+  JSON filter expression: ""
+  JSON datetime template: ""
+  JSON path mode: "strict"
+  Unicode escape character: ""
+  JSON path string literal: "\'a\'"
+  JSON path key name: "\'a\'"
